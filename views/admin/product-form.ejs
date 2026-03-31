@@ -1,0 +1,85 @@
+<%- include('../partials/head', { title: product ? 'Sửa sản phẩm' : 'Thêm sản phẩm mới' }) %>
+<%- include('../partials/navbar') %>
+<div class="container py-4">
+  <h1><%= product ? 'Sửa sản phẩm' : 'Thêm sản phẩm mới' %></h1>
+
+  <form action="<%= product ? '/admin/products/' + product.id + '/update' : '/admin/products' %>" method="POST">
+    <div class="mb-3">
+      <label class="form-label">Tên sản phẩm</label>
+      <input type="text" name="name" class="form-control" required value="<%= product ? product.name : '' %>" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Mô tả</label>
+      <textarea name="description" class="form-control"><%= product ? product.description : '' %></textarea>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Giá</label>
+      <input type="number" name="price" class="form-control" required value="<%= product ? product.price : '' %>" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Danh mục</label>
+      <select name="category" class="form-select" required>
+        <option value="">-- Chọn danh mục --</option>
+        <% const categoryList = (typeof categories !== 'undefined' && categories ? categories : []); %>
+        <% if (categoryList.length > 0) { %>
+          <% categoryList.forEach(cat => { %>
+            <option value="<%= cat.name %>" <%= product && product.category === cat.name ? 'selected' : '' %>><%= cat.name %></option>
+          <% }) %>
+        <% } else { %>
+          <option disabled>Chưa có danh mục. Vui lòng vào quản lý danh mục để thêm.</option>
+        <% } %>
+      </select>
+    </div>
+    <div class="mb-4">
+      <label class="form-label">Ảnh sản phẩm</label>
+      <div class="d-flex flex-column flex-md-row align-items-start gap-3">
+        <div class="image-preview-box">
+          <img id="image-preview" src="<%= product ? product.image_url : '/images/products/default.jpg' %>" alt="Ảnh sản phẩm" class="img-fluid rounded" style="max-width:220px; max-height:220px; object-fit:contain; background:#f8f9fa; border:1px solid #ddd;" />
+        </div>
+        <div class="flex-fill">
+          <div class="mb-3">
+            <label class="form-label">Nhập URL ảnh (tùy chọn)</label>
+            <input id="image-url-input" type="text" name="image_url" class="form-control" value="<%= product ? product.image_url : '' %>" placeholder="https://..." />
+            <div class="form-text">Hoặc chọn file từ máy tính bên dưới để tự động chuyển vào URL.</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Chọn file ảnh (jpg/png)</label>
+            <input id="image-file-input" type="file" class="form-control" accept="image/*" />
+          </div>
+          <small class="text-muted">Nếu không chọn ảnh, sẽ dùng ảnh hiện tại / mặc định.</small>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary"><%= product ? 'Cập nhật' : 'Thêm' %></button>
+    <a href="/admin/products" class="btn btn-secondary">Quay lại</a>
+  </form>
+</div>
+
+<script>
+  const imageFileInput = document.getElementById('image-file-input');
+  const imageUrlInput = document.getElementById('image-url-input');
+  const imagePreview = document.getElementById('image-preview');
+
+  if (imageFileInput) {
+    imageFileInput.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        imageUrlInput.value = reader.result;
+        imagePreview.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  if (imageUrlInput) {
+    imageUrlInput.addEventListener('input', () => {
+      if (!imageUrlInput.value) return;
+      imagePreview.src = imageUrlInput.value;
+    });
+  }
+</script>
+</div>
+<%- include('../partials/footer') %>

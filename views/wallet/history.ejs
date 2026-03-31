@@ -1,0 +1,157 @@
+<%- include('../partials/head', { title: 'Lịch sử giao dịch - Coffee Express' }) %>
+<%- include('../partials/navbar') %>
+
+<div class="container py-5">
+  <%- include('../partials/flash') %>
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold mb-0">📋 Lịch sử giao dịch</h2>
+    <a href="/profile" class="btn btn-outline-secondary">
+      <i class="bi bi-arrow-left me-2"></i>Quay lại
+    </a>
+  </div>
+
+  <% if (transactions.length === 0) { %>
+  <div class="alert alert-info">
+    <i class="bi bi-info-circle me-2"></i>Bạn chưa có giao dịch nào.
+  </div>
+  <% } else { %>
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>Ngày giờ</th>
+          <th>Loại</th>
+          <th>Phương thức</th>
+          <th>Số tiền</th>
+          <th>Số dư</th>
+          <th>Trạng thái</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% transactions.forEach((tx, index) => { %>
+        <tr>
+          <td>
+            <small>
+              <%= new Date(tx.created_at).toLocaleString('vi-VN') %>
+            </small>
+          </td>
+          <td>
+            <% if (tx.type === 'deposit') { %>
+            <span class="badge bg-success">Nạp tiền</span>
+            <% } else if (tx.type === 'payment') { %>
+            <span class="badge bg-danger">Thanh toán</span>
+            <% } else { %>
+            <span class="badge bg-secondary"><%= tx.type %></span>
+            <% } %>
+          </td>
+          <td><small><%= tx.payment_method %></small></td>
+          <td>
+            <strong class="<%= tx.type === 'deposit' ? 'text-success' : 'text-danger' %>">
+              <%= tx.type === 'deposit' ? '+' : '-' %>₫<%= tx.amount.toLocaleString('vi-VN') %>
+            </strong>
+          </td>
+          <td>₫<%= tx.balance_after.toLocaleString('vi-VN') %></td>
+          <td>
+            <% if (tx.status === 'completed') { %>
+            <span class="badge bg-success">Hoàn tất</span>
+            <% } else if (tx.status === 'pending') { %>
+            <span class="badge bg-warning">Đang xử lý</span>
+            <% } else { %>
+            <span class="badge bg-danger">Thất bại</span>
+            <% } %>
+          </td>
+          <td>
+            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#detailModal<%= index %>">
+              <i class="bi bi-eye"></i>
+            </button>
+          </td>
+        </tr>
+
+        <!-- Modal chi tiết giao dịch -->
+        <div class="modal fade" id="detailModal<%= index %>" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Chi tiết giao dịch</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <div class="row mb-3">
+                  <div class="col-5"><strong>Mã giao dịch:</strong></div>
+                  <div class="col-7"><small><%= tx.id %></small></div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-5"><strong>Ngày giờ:</strong></div>
+                  <div class="col-7"><small><%= new Date(tx.created_at).toLocaleString('vi-VN') %></small></div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-5"><strong>Loại:</strong></div>
+                  <div class="col-7">
+                    <% if (tx.type === 'deposit') { %>
+                    <span class="badge bg-success">Nạp tiền</span>
+                    <% } else { %>
+                    <span class="badge bg-danger">Thanh toán</span>
+                    <% } %>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-5"><strong>Phương thức:</strong></div>
+                  <div class="col-7"><small><%= tx.payment_method %></small></div>
+                </div>
+                <% if (tx.bank_name) { %>
+                <div class="row mb-3">
+                  <div class="col-5"><strong>Ngân hàng:</strong></div>
+                  <div class="col-7"><small><%= tx.bank_name %></small></div>
+                </div>
+                <% } %>
+                <% if (tx.bank_account) { %>
+                <div class="row mb-3">
+                  <div class="col-5"><strong>Số tài khoản:</strong></div>
+                  <div class="col-7"><small><%= tx.bank_account %></small></div>
+                </div>
+                <% } %>
+                <div class="row mb-3">
+                  <div class="col-5"><strong>Số tiền:</strong></div>
+                  <div class="col-7">
+                    <strong class="<%= tx.type === 'deposit' ? 'text-success' : 'text-danger' %>">
+                      <%= tx.type === 'deposit' ? '+' : '-' %>₫<%= tx.amount.toLocaleString('vi-VN') %>
+                    </strong>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-5"><strong>Số dư trước:</strong></div>
+                  <div class="col-7"><small>₫<%= tx.balance_before.toLocaleString('vi-VN') %></small></div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-5"><strong>Số dư sau:</strong></div>
+                  <div class="col-7"><small>₫<%= tx.balance_after.toLocaleString('vi-VN') %></small></div>
+                </div>
+                <div class="row">
+                  <div class="col-5"><strong>Trạng thái:</strong></div>
+                  <div class="col-7">
+                    <% if (tx.status === 'completed') { %>
+                    <span class="badge bg-success">Hoàn tất</span>
+                    <% } else if (tx.status === 'pending') { %>
+                    <span class="badge bg-warning">Đang xử lý</span>
+                    <% } else { %>
+                    <span class="badge bg-danger">Thất bại</span>
+                    <% } %>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>

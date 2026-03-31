@@ -1,0 +1,58 @@
+<%- include('../partials/head', { title: 'Quản lý nhà kho' }) %>
+<%- include('../partials/navbar') %>
+<div class="container py-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h2">Quản lý nhà kho</h1>
+      <p class="text-muted">Theo dõi tồn kho, thêm sửa xóa mục kho, cảnh báo tồn thấp.</p>
+    </div>
+    <a href="/admin/warehouse/new" class="btn btn-success">Thêm mục kho mới</a>
+  </div>
+
+  <div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+      <% if (items && items.length > 0) { %>
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>#</th>
+              <th>SKU</th>
+              <th>Sản phẩm / tên</th>
+              <th>Số lượng</th>
+              <th>Min stock</th>
+              <th>Vị trí</th>
+              <th>Ghi chú</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% items.forEach((item, index) => { %>
+            <tr class="<%= Number(item.quantity) <= Number(item.min_stock || 0) ? 'table-warning' : '' %>">
+              <td><%= index + 1 %></td>
+              <td><%= item.sku %></td>
+              <td><strong><%= item.name %></strong><br><small class="text-muted"><%= item.product_id || 'Không có' %></small></td>
+              <td><%= item.quantity %></td>
+              <td><%= item.min_stock || 0 %></td>
+              <td><%= item.location || '-' %></td>
+              <td><%= item.notes || '-' %></td>
+              <td>
+                <a href="/admin/warehouse/<%= item.id %>/edit" class="btn btn-sm btn-primary">Sửa</a>
+                <form action="/admin/warehouse/<%= item.id %>/delete" method="post" class="d-inline">
+                  <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa mục kho này?')">Xóa</button>
+                </form>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <% } else { %>
+        <div class="p-4">
+          <p class="mb-0 text-muted">Hiện chưa có mục kho nào. Hãy thêm mới để theo dõi hàng tồn.</p>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+<%- include('../partials/footer') %>

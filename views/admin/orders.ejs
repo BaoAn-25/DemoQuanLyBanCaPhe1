@@ -1,0 +1,73 @@
+<%- include('../partials/head', { title: 'Admin Orders' }) %>
+<%- include('../partials/navbar') %>
+<div class="container py-4">
+  <h1>Quản lý đơn hàng</h1>
+  <% if (orders.length === 0) { %>
+    <div class="alert alert-info">Chưa có đơn hàng nào.</div>
+  <% } else { %>
+  <div class="row row-cols-1 row-cols-md-3 g-3 mb-4">
+    <div class="col">
+      <div class="p-3 bg-white rounded shadow-sm h-100">
+        <h5 class="mb-1">Tổng đơn hàng</h5>
+        <h3><%= orders.length %></h3>
+      </div>
+    </div>
+    <div class="col">
+      <div class="p-3 bg-white rounded shadow-sm h-100">
+        <h5 class="mb-1">Đã hoàn thành</h5>
+        <h3><%= orders.filter(o => o.status === 'completed').length %></h3>
+      </div>
+    </div>
+    <div class="col">
+      <div class="p-3 bg-white rounded shadow-sm h-100">
+        <h5 class="mb-1">Chờ xử lý</h5>
+        <h3><%= orders.filter(o => o.status === 'pending').length %></h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-bordered align-middle">
+      <thead>
+        <tr>
+          <th>Mã đơn</th>
+          <th>Người đặt</th>
+          <th>Số sản phẩm</th>
+          <th>Tổng tiền</th>
+          <th>Trạng thái</th>
+          <th>Ngày đặt</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% orders.forEach(order => { %>
+          <tr>
+            <td><%= order.id %></td>
+            <td><%= order.username %></td>
+            <td><%= Array.isArray(order.items) ? order.items.reduce((sum, item) => sum + (parseInt(item.quantity || 0) || 0), 0) : 0 %></td>
+            <td>₫<%= Number(order.total_amount).toLocaleString('vi-VN') %></td>
+            <td>
+              <span class="badge <%=
+                order.status === 'completed' ? 'bg-success' :
+                order.status === 'pending' ? 'bg-warning text-dark' :
+                order.status === 'processing' ? 'bg-info text-dark' :
+                order.status === 'shipped' ? 'bg-primary' :
+                order.status === 'cancelled' ? 'bg-danger' : 'bg-secondary'
+              %>"><%= 
+                order.status === 'completed' ? 'Hoàn thành' :
+                order.status === 'pending' ? 'Chờ xử lý' :
+                order.status === 'processing' ? 'Đang xử lý' :
+                order.status === 'shipped' ? 'Đang giao' :
+                order.status === 'cancelled' ? 'Đã hủy' : 'Không xác định'
+              %></span>
+            </td>
+            <td><%= new Date(order.created_at.toDate ? order.created_at.toDate() : order.created_at).toLocaleString('vi-VN') %></td>
+            <td><a href="/admin/orders/<%= order.id %>" class="btn btn-sm btn-primary">Xem</a></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+  <% } %>
+</div>
+<%- include('../partials/footer') %>

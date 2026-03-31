@@ -1,0 +1,18 @@
+<div class="position-fixed top-0 end-0 p-3" style="z-index: 9999; margin-top: 70px;">
+  <% const flashSuccess = (typeof success !== 'undefined' && success) ? success : (typeof successMsg !== 'undefined' ? successMsg : []); %>
+  <% const flashError = (typeof error !== 'undefined' && error) ? error : (typeof errorMsg !== 'undefined' ? errorMsg : []); %>
+
+  <% if (flashSuccess && flashSuccess.length > 0) { %>
+    <div class="alert alert-success alert-dismissible fade show shadow-lg border-0" role="alert" style="min-width: 250px;">
+      <i class="bi bi-check-circle-fill me-2"></i><strong><%= flashSuccess[0] %></strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% } %>
+
+  <% if (flashError && flashError.length > 0) { %>
+    <div class="alert alert-danger alert-dismissible fade show shadow-lg border-0" role="alert" style="min-width: 250px;">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i><strong><%= flashError[0] %></strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% } %>
+</div>

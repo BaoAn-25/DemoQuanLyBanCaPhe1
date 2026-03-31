@@ -1,0 +1,85 @@
+<%- include('partials/head', { title: 'Giỏ hàng - Coffee Express' }) %>
+<%- include('partials/navbar') %>
+<div class="container py-4">
+  <%- include('partials/flash') %>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold mb-0">Giỏ hàng</h2>
+    <div>
+      <% if (items.length > 0) { %>
+      <form action="/products/cart/clear" method="POST" class="d-inline me-2">
+        <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa tất cả sản phẩm trong giỏ hàng?')">
+          <i class="bi bi-trash me-1"></i>Xóa tất cả
+        </button>
+      </form>
+      <% } %>
+      <a href="/products" class="btn btn-outline-secondary btn-sm">Tiếp tục mua sắm</a>
+    </div>
+  </div>
+
+  <% if (items.length === 0) { %>
+  <div class="alert alert-info">Giỏ hàng của bạn đang trống.</div>
+  <% } else { %>
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr>
+          <th>Sản phẩm</th>
+          <th>Giá</th>
+          <th>Số lượng</th>
+          <th>Tổng</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% items.forEach((item) => { %>
+        <tr>
+          <td>
+            <div class="d-flex align-items-center gap-3">
+              <img src="<%= item.image_url %>" alt="<%= item.name %>" class="cart-thumb" />
+              <div>
+                <div class="fw-bold"><%= item.name %></div>
+                <div class="text-muted"><%= item.category %></div>
+              </div>
+            </div>
+          </td>
+          <td>đ<%= item.price.toLocaleString('vi-VN') %></td>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <form action="/products/cart/update" method="POST" class="d-inline">
+                <input type="hidden" name="productId" value="<%= item.id %>" />
+                <input type="hidden" name="action" value="decrease" />
+                <button type="submit" class="btn btn-sm btn-outline-secondary">-</button>
+              </form>
+              <span class="mx-2"><%= item.quantity %></span>
+              <form action="/products/cart/update" method="POST" class="d-inline">
+                <input type="hidden" name="productId" value="<%= item.id %>" />
+                <input type="hidden" name="action" value="increase" />
+                <button type="submit" class="btn btn-sm btn-outline-secondary">+</button>
+              </form>
+            </div>
+          </td>
+          <td>đ<%= item.subTotal.toLocaleString('vi-VN') %></td>
+          <td>
+            <form action="/products/cart/remove" method="POST">
+              <input type="hidden" name="productId" value="<%= item.id %>" />
+              <button type="submit" class="btn btn-sm btn-outline-danger">Xóa</button>
+            </form>
+          </td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="d-flex justify-content-end align-items-center gap-4">
+    <div class="fs-5">
+      <span class="fw-bold">Tổng:</span> đ<%= total.toLocaleString('vi-VN') %>
+    </div>
+    <a href="/orders/checkout" class="btn btn-success btn-lg">
+      <i class="bi bi-check-circle me-2"></i>Thanh toán
+    </a>
+  </div>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>

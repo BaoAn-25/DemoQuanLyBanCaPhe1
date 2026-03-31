@@ -1,0 +1,131 @@
+<%- include('partials/head', { title: 'Hồ sơ cá nhân - Coffee Express' }) %>
+<%- include('partials/navbar') %>
+
+<div class="container py-5">
+  <%- include('partials/flash') %>
+
+  <div class="row">
+    <div class="col-md-4 mb-4">
+      <div class="card shadow profile-card">
+        <div class="profile-top"></div>
+        <div class="card-body text-center pt-5">
+          <div class="profile-avatar mb-3">
+            <i class="bi bi-person-fill"></i>
+          </div>
+          <h4 class="card-title mb-1"><%= currentUser.username %></h4>
+          <p class="text-muted mb-3"><i class="bi bi-envelope me-2"></i><%= currentUser.email %></p>
+
+          <div class="mb-4 py-2 border-top border-bottom">
+            <p class="text-muted mb-1">💰 Số dư ví</p>
+            <p class="h4 text-success mb-0">₫<%= (currentUser.wallet_balance || 0).toLocaleString('vi-VN') %></p>
+          </div>
+
+          <a href="/wallet/deposit" class="btn btn-secondary btn-lg w-100 mb-2 profile-btn">
+            <i class="bi bi-wallet-fill me-2"></i>Nạp tiền
+          </a>
+
+          <a href="/wallet/history" class="btn btn-outline-light btn-lg w-100 profile-btn">
+            <i class="bi bi-clock-history me-2"></i>Lịch sử giao dịch
+          </a>
+
+          <form action="/auth/logout" method="POST" class="mt-3">
+            <button type="submit" class="btn btn-danger btn-lg w-100 profile-btn">
+              <i class="bi bi-box-arrow-right me-2"></i>Đăng xuất
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <div class="card shadow">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">📦 Đơn hàng gần đây</h5>
+          <a href="/orders" class="btn btn-sm btn-outline-primary">Xem tất cả</a>
+        </div>
+        <div class="card-body">
+          <% if (orders && orders.length > 0) { %>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th>Mã đơn</th>
+                  <th>Ngày</th>
+                  <th>Tổng tiền</th>
+                  <th>Trạng thái</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% orders.forEach((order) => { %>
+                <tr>
+                  <td>
+                    <strong>#<%= order.id.substring(0, 8) %></strong>
+                  </td>
+                  <td>
+                    <small>
+                      <%= new Date(order.created_at).toLocaleDateString('vi-VN') %>
+                    </small>
+                  </td>
+                  <td>
+                    <strong class="text-success">₫<%= (order.total_amount || 0).toLocaleString('vi-VN') %></strong>
+                  </td>
+                  <td>
+                    <% if (order.status === 'completed') { %>
+                    <span class="badge bg-success">Hoàn tất</span>
+                    <% } else if (order.status === 'paid') { %>
+                    <span class="badge bg-info">Đã thanh toán</span>
+                    <% } else if (order.status === 'pending') { %>
+                    <span class="badge bg-warning text-dark">Chờ xử lý</span>
+                    <% } else if (order.status === 'cancelled') { %>
+                    <span class="badge bg-danger">Đã hủy</span>
+                    <% } else { %>
+                    <span class="badge bg-secondary">Đang xử lý</span>
+                    <% } %>
+                  </td>
+                  <td>
+                    <a href="/orders/<%= order.id %>" class="btn btn-sm btn-outline-primary">
+                     <i class="bi bi-eye me-1"></i>Xem
+                    </a>
+                  </td>
+                </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+          <% } else { %>
+          <div class="alert alert-info">
+            Bạn chưa có đơn hàng nào. <a href="/products" class="alert-link">Mua sắm ngay</a>
+          </div>
+          <% } %>
+        </div>
+      </div>
+
+      <div class="row mt-4 g-3">
+        <div class="col-md-6">
+          <div class="card profile-stat-card text-center">
+            <div class="card-body">
+              <h6 class="text-muted mb-2">Tổng số đơn</h6>
+              <h3 class="mb-0"><%= orders ? orders.length : 0 %></h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card profile-stat-card text-center">
+            <div class="card-body">
+              <h6 class="text-muted mb-2">Tổng chi tiêu</h6>
+              <h3 class="mb-0 text-success">
+                ₫<% 
+                  const totalSpent = (orders || []).reduce((sum, order) => sum + (order.total_amount || 0), 0);
+                %>
+                <%= totalSpent.toLocaleString('vi-VN') %>
+              </h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

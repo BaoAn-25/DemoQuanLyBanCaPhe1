@@ -1,0 +1,109 @@
+<%- include('partials/head', { title: 'Chi tiết đơn hàng - Coffee Express' }) %>
+<%- include('partials/navbar') %>
+
+<div class="container py-5">
+  <%- include('partials/flash') %>
+
+  <div class="row justify-content-center mb-4">
+    <div class="col-md-8 d-flex justify-content-start">
+      <a href="javascript:history.back()" class="btn btn-light bg-white btn-sm shadow-sm rounded-pill px-3 d-inline-flex align-items-center gap-1 border">
+        <i class="bi bi-chevron-left fs-6"></i>
+        <span class="fw-medium">Quay lại</span>
+      </a>
+      
+      </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow border-0 overflow-hidden">
+        <div class="card-header bg-success text-white border-0 py-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h4 class="mb-1 fw-bold">✅ Chi tiết đơn hàng</h4>
+              <p class="mb-0 small opacity-75">Mã đơn hàng: <strong><%= order.id.substring(0, 8) %></strong></p>
+            </div>
+            <% if (order.status === 'pending') { %>
+            <span class="badge bg-warning text-dark fs-6 rounded-pill px-3 py-2">Chờ xử lý</span>
+            <% } else if (order.status === 'paid') { %>
+            <span class="badge bg-info text-dark fs-6 rounded-pill px-3 py-2">Đã thanh toán</span>
+            <% } else if (order.status === 'processing') { %>
+            <span class="badge bg-primary fs-6 rounded-pill px-3 py-2">Đang xử lý</span>
+            <% } else if (order.status === 'completed') { %>
+            <span class="badge bg-light text-success fs-6 rounded-pill px-3 py-2">Hoàn tất</span>
+            <% } else { %>
+            <span class="badge bg-danger fs-6 rounded-pill px-3 py-2">Hủy</span>
+            <% } %>
+          </div>
+        </div>
+        <div class="card-body p-4">
+          <h5 class="mb-3 fw-bold text-dark">Thông tin đơn hàng</h5>
+          <div class="row mb-4 bg-light p-3 rounded-3 mx-0">
+            <div class="col-md-6 mb-3 mb-md-0">
+              <p class="mb-2 text-muted">
+                <i class="bi bi-person me-2"></i><strong>Tên khách hàng:</strong><br />
+                <span class="text-dark ms-4"><%= order.username %></span>
+              </p>
+              <p class="mb-0 text-muted">
+                <i class="bi bi-envelope me-2"></i><strong>Email:</strong><br />
+                <span class="text-dark ms-4"><%= order.email %></span>
+              </p>
+            </div>
+            <div class="col-md-6">
+              <p class="mb-2 text-muted">
+                <i class="bi bi-calendar3 me-2"></i><strong>Ngày đặt:</strong><br />
+                <span class="text-dark ms-4"><%= new Date(order.created_at).toLocaleString('vi-VN') %></span>
+              </p>
+              <p class="mb-0 text-muted">
+                <i class="bi bi-credit-card me-2"></i><strong>Phương thức thanh toán:</strong><br />
+                <span class="text-dark ms-4"><i class="bi bi-wallet2 me-1"></i> Ví tiền</span>
+              </p>
+            </div>
+          </div>
+
+          <hr class="my-4 text-muted opacity-25" />
+
+          <h5 class="mb-3 fw-bold text-dark">Sản phẩm đã đặt</h5>
+          <div class="table-responsive mb-4">
+            <table class="table table-borderless table-striped table-hover table-sm align-middle">
+              <thead class="table-light text-uppercase small text-muted">
+                <tr>
+                  <th class="ps-3 py-2">Sản phẩm</th>
+                  <th class="text-center py-2">Số lượng</th>
+                  <th class="text-end py-2">Giá</th>
+                  <th class="text-end pe-3 py-2">Tổng</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% order.items.forEach((item) => { %>
+                <tr>
+                  <td class="ps-3">
+                    <div class="d-flex align-items-center gap-3">
+                      <img src="<%= item.image_url %>" alt="<%= item.name %>" class="rounded-3 shadow-sm" style="width: 48px; height: 48px; object-fit: cover;" />
+                      <strong class="text-dark"><%= item.name %></strong>
+                    </div>
+                  </td>
+                  <td class="text-center fw-bold fs-5"><%= item.quantity %></td>
+                  <td class="text-end">₫<%= item.price.toLocaleString('vi-VN') %></td>
+                  <td class="text-end pe-3 fw-bold">₫<%= item.subTotal.toLocaleString('vi-VN') %></td>
+                </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="row mb-3 bg-white p-3 rounded-3 shadow-sm border mx-0">
+            <div class="col-md-8 text-end">
+              <h5 class="mb-0 mt-1 fw-medium text-secondary">Tổng cộng:</h5>
+            </div>
+            <div class="col-md-4 text-end">
+              <h3 class="text-success mb-0 fw-bold">₫<%= (order.total_amount || 0).toLocaleString('vi-VN') %></h3>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,51 @@
+<%- include('../partials/head', { title: 'Quản lý danh mục' }) %>
+<%- include('../partials/navbar') %>
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="mb-0">Quản lý danh mục</h1>
+    <a href="/admin/categories/new" class="btn btn btn-success btn-lg shadow-sm">Thêm danh mục mới</a>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <div class="admin-summary-card">
+        <h5 class="mb-2">Tổng danh mục</h5>
+        <p class="display-6 mb-0"><%= categories.length %></p>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="admin-summary-card">
+        <h5 class="mb-2">Danh mục mới nhất</h5>
+        <% if (categories.length > 0) { %>
+          <p class="mb-0"><strong><%= categories[0].name %></strong> - <%= categories[0].description || 'Không có mô tả' %></p>
+        <% } else { %>
+          <p class="mb-0 text-muted">Chưa có danh mục nào.</p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <% if (!categories || categories.length === 0) { %>
+    <div class="alert alert-info">Hiện không có danh mục nào. Hãy thêm danh mục mới để trang chủ cập nhật.</div>
+  <% } else { %>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
+      <% categories.forEach((category) => { %>
+        <div class="col">
+          <div class="card h-100 shadow-sm border-0 category-card-admin">
+            <div class="card-body">
+              <h5 class="card-title"><%= category.name %></h5>
+              <p class="card-text text-muted"><%= category.description || 'Chưa có mô tả thêm' %></p>
+              <div class="d-flex gap-2">
+                <a href="/admin/categories/<%= category.id %>/edit" class="btn btn-warning btn-sm flex-grow-1">Sửa</a>
+                <form action="/admin/categories/<%= category.id %>/delete" method="POST" class="flex-grow-1" onsubmit="return confirm('Xóa danh mục "<%= category.name %>"?');">
+                  <button type="submit" class="btn btn-danger btn-sm w-100">Xóa</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</div>
+<%- include('../partials/footer') %>

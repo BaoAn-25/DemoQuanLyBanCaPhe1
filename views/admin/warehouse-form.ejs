@@ -1,0 +1,44 @@
+<%- include('../partials/head', { title: item ? 'Sửa mục kho' : 'Thêm mục kho' }) %>
+<%- include('../partials/navbar') %>
+<div class="container py-5">
+  <div class="card shadow-sm border-0">
+    <div class="card-body">
+      <h1 class="h3 mb-4"><%= item ? 'Sửa mục kho' : 'Thêm mục kho' %></h1>
+      <form action="<%= item ? '/admin/warehouse/' + item.id + '/update' : '/admin/warehouse' %>" method="post">
+        <div class="mb-3">
+          <label class="form-label">SKU</label>
+          <input type="text" name="sku" class="form-control" value="<%= item ? item.sku : '' %>" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Tên sản phẩm</label>
+          <input type="text" name="name" class="form-control" value="<%= item ? item.name : '' %>" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Mã sản phẩm (tuỳ chọn)</label>
+          <input type="text" name="product_id" class="form-control" value="<%= item ? item.product_id : '' %>">
+        </div>
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Số lượng</label>
+            <input type="number" name="quantity" class="form-control" min="0" value="<%= item ? item.quantity : 0 %>" required>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Tồn tối thiểu</label>
+            <input type="number" name="min_stock" class="form-control" min="0" value="<%= item ? item.min_stock : 0 %>">
+          </div>
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Vị trí</label>
+            <input type="text" name="location" class="form-control" value="<%= item ? item.location : '' %>">
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Ghi chú</label>
+          <textarea name="notes" class="form-control" rows="3"><%= item ? item.notes : '' %></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary"><%= item ? 'Cập nhật' : 'Thêm mới' %></button>
+        <a href="/admin/warehouse" class="btn btn-secondary ms-2">Hủy</a>
+      </form>
+    </div>
+  </div>
+</div>
+<%- include('../partials/footer') %>

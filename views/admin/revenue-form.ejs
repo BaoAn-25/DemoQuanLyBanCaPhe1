@@ -1,0 +1,26 @@
+<%- include('../partials/head', { title: revenue && revenue.id ? 'Sửa doanh thu' : 'Thêm doanh thu' }) %>
+<%- include('../partials/navbar') %>
+<div class="container py-5">
+  <a href="/admin/revenue" class="btn btn-secondary mb-4">← Quay lại danh sách</a>
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h2 class="card-title"><%= revenue && revenue.id ? 'Sửa doanh thu' : 'Thêm doanh thu mới' %></h2>
+      <form action="<%= revenue && revenue.id ? '/admin/revenue/' + revenue.id + '/update' : '/admin/revenue' %>" method="post">
+        <div class="mb-3">
+          <label for="date" class="form-label">Ngày</label>
+          <input type="date" class="form-control" id="date" name="date" required value="<%= revenue && revenue.date ? (revenue.date.toDate ? revenue.date.toDate().toISOString().split('T')[0] : new Date(revenue.date).toISOString().split('T')[0]) : '' %>">
+        </div>
+        <div class="mb-3">
+          <label for="amount" class="form-label">Số tiền (VND)</label>
+          <input type="number" class="form-control" id="amount" name="amount" required min="0" step="1000" value="<%= revenue && revenue.amount ? revenue.amount : '' %>">
+        </div>
+        <div class="mb-3">
+          <label for="description" class="form-label">Mô tả</label>
+          <textarea class="form-control" id="description" name="description" rows="3"><%= revenue && revenue.description ? revenue.description : '' %></textarea>
+        </div>
+        <button type="submit" class="btn btn-success"><%= revenue && revenue.id ? 'Cập nhật' : 'Thêm mới' %></button>
+      </form>
+    </div>
+  </div>
+</div>
+<%- include('../partials/footer') %>

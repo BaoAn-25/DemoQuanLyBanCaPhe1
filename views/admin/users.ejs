@@ -1,0 +1,88 @@
+<%- include('../partials/head', { title: 'Admin Users' }) %>
+<%- include('../partials/navbar') %>
+<div class="container py-4">
+  <h1 class="mb-4">Quản lý tài khoản</h1>
+  <% if (users.length === 0) { %>
+    <div class="alert alert-info">Chưa có tài khoản nào.</div>
+  <% } else { %>
+    <% const totalUsers = users.length;
+       const adminCount = users.filter(u => u.role === 'admin').length;
+       const normalCount = totalUsers - adminCount;
+    %>
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <div class="card shadow-sm border-0">
+          <div class="card-body text-center">
+            <div class="fs-1 text-primary">👥</div>
+            <div class="h5 mt-2">Tổng tài khoản</div>
+            <div class="display-6 fw-bold"> <%= totalUsers %> </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card shadow-sm border-0">
+          <div class="card-body text-center">
+            <div class="fs-1 text-danger">🛡️</div>
+            <div class="h5 mt-2">Admin</div>
+            <div class="display-6 fw-bold"> <%= adminCount %> </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card shadow-sm border-0">
+          <div class="card-body text-center">
+            <div class="fs-1 text-secondary">👤</div>
+            <div class="h5 mt-2">User thường</div>
+            <div class="display-6 fw-bold"> <%= normalCount %> </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="h4 mb-3">Danh sách tài khoản <span class="badge bg-primary ms-2"><%= totalUsers %> tài khoản</span></h2>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle">
+            <thead>
+              <tr>
+                <th>Tên đăng nhập</th>
+                <th>Email</th>
+                <th>Vai trò</th>
+                <th>Số dư ví</th>
+                <th>Ngày tạo</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% users.forEach((user) => { %>
+                <tr>
+                  <td><%= user.username %></td>
+                  <td><%= user.email %></td>
+                  <td>
+                    <span class="badge <%= user.role === 'admin' ? 'bg-danger' : 'bg-secondary' %>">
+                      <%= user.role === 'admin' ? 'Admin' : 'User' %>
+                    </span>
+                  </td>
+                  <td>₫<%= (user.wallet_balance || 0).toLocaleString('vi-VN') %></td>
+                  <td><%= new Date(user.created_at).toLocaleDateString('vi-VN') %></td>
+                  <td>
+                    <a href="/admin/users/<%= user.id %>/edit" class="btn btn-sm btn-warning me-1 shadow-sm text-white" style="min-width:80px;">
+                      ✎ Sửa
+                    </a>
+                    <% if (user.role !== 'admin') { %>
+                      <form action="/admin/users/<%= user.id %>/delete" method="POST" class="d-inline" onsubmit="return confirm('Xóa tài khoản?')">
+                        <button type="submit" class="btn btn-sm btn-danger shadow-sm" style="min-width:80px;">🗑️ Xóa</button>
+                      </form>
+                    <% } %>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  <% } %>
+</div>
+<%- include('../partials/footer') %>

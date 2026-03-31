@@ -1,0 +1,59 @@
+<%- include('../partials/head', { title: 'Admin Dashboard' }) %>
+<%- include('../partials/navbar') %>
+<div class="container py-5">
+  <h1 class="display-4 fw-bold mb-4">Admin Dashboard</h1>
+  <p class="text-muted mb-4">Bảng điều khiển quản trị: điều hướng nhanh tới quản lý sản phẩm, đơn hàng, danh mục, tài khoản.</p>
+  <div class="row g-4">
+    <div class="col-md-6 col-lg-3">
+      <div class="feature-card p-4 h-100 text-center">
+        <div class="mb-3 feature-icon">☕</div>
+        <h5 class="mb-2">Quản lý sản phẩm</h5>
+        <p class="text-muted">Thêm, sửa, xóa sản phẩm trong hệ thống.</p>
+        <a href="/admin/products" class="btn btn-warning btn-block text-white mt-2">Danh sách sản phẩm</a>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <div class="feature-card p-4 h-100 text-center">
+        <div class="mb-3 feature-icon">📦</div>
+        <h5 class="mb-2">Quản lý đơn hàng</h5>
+        <p class="text-muted">Xem và xử lý trạng thái đơn hàng nhanh chóng.</p>
+        <a href="/admin/orders" class="btn btn-warning btn-block text-white mt-2">Danh sách đơn hàng</a>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <div class="feature-card p-4 h-100 text-center">
+        <div class="mb-3 feature-icon">🗂️</div>
+        <h5 class="mb-2">Quản lý danh mục</h5>
+        <p class="text-muted">Thêm, sửa, xóa danh mục sản phẩm.</p>
+        <a href="/admin/categories" class="btn btn-warning btn-block text-white mt-2">Danh sách danh mục</a>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <div class="feature-card p-4 h-100 text-center">
+        <div class="mb-3 feature-icon">👥</div>
+        <h5 class="mb-2">Quản lý tài khoản</h5>
+        <p class="text-muted">Xem và quản lý tài khoản người dùng.</p>
+        <a href="/admin/users" class="btn btn-warning btn-block text-white mt-2">Danh sách tài khoản</a>
+      </div>
+    </div>
+  </div>
+  <div class="row g-4 mt-2">
+    <div class="col-md-6 col-lg-3">
+      <div class="feature-card p-4 h-100 text-center">
+        <div class="mb-3 feature-icon">💰</div>
+        <h5 class="mb-2">Quản lý doanh thu</h5>
+        <p class="text-muted">Theo dõi, thêm, sửa, xóa và thống kê doanh thu.</p>
+        <a href="/admin/revenue" class="btn btn-warning btn-block text-white mt-2">Danh sách doanh thu</a>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+      <div class="feature-card p-4 h-100 text-center">
+        <div class="mb-3 feature-icon">🏬</div>
+        <h5 class="mb-2">Quản lý nhà kho</h5>
+        <p class="text-muted">Theo dõi tồn kho, thêm sửa xóa mục kho.</p>
+        <a href="/admin/warehouse" class="btn btn-warning btn-block text-white mt-2">Danh sách kho</a>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include('../partials/footer') %>

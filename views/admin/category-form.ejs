@@ -1,0 +1,44 @@
+<%- include('../partials/head', { title: category ? 'Sửa danh mục' : 'Thêm danh mục mới' }) %>
+<%- include('../partials/navbar') %>
+<div class="container py-4">
+  <div class="row">
+    <div class="col-12 mb-4">
+      <h1><%= category ? 'Sửa danh mục' : 'Thêm danh mục mới' %></h1>
+      <p class="text-muted">Thêm hoặc chỉnh sửa thông tin danh mục sản phẩm.</p>
+    </div>
+  </div>
+
+  <div class="row gy-4">
+    <div class="col-lg-6">
+      <form action="<%= category ? '/admin/categories/' + category.id + '/update' : '/admin/categories' %>" method="POST" id="category-form">
+        <div class="mb-3">
+          <label class="form-label">Tên danh mục</label>
+          <input type="text" name="name" class="form-control" required value="<%= category ? category.name : '' %>" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Mô tả</label>
+          <textarea name="description" class="form-control" rows="3"><%= category ? category.description : '' %></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-success me-2"><%= category ? 'Cập nhật' : 'Thêm mới' %></button>
+        <a href="/admin/categories" class="btn btn-secondary">Quay lại</a>
+      </form>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h5 class="card-title">Hướng dẫn</h5>
+          <p class="card-text text-muted">Nhập tên danh mục và mô tả để tạo danh mục mới. Danh mục sẽ xuất hiện trong menu sản phẩm.</p>
+          <ul>
+            <li>Tên danh mục nên ngắn gọn và dễ hiểu.</li>
+            <li>Mô tả giúp khách hàng biết thêm về danh mục.</li>
+            <li>Sau khi thêm, danh mục sẽ tự động hiển thị trên trang chủ.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

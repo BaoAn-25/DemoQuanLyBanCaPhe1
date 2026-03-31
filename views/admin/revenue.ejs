@@ -1,0 +1,175 @@
+<%- include('../partials/head', { title: 'Quản lý doanh thu' }) %>
+<%- include('../partials/navbar') %>
+<% const totalOrdersCount = typeof totalOrders !== 'undefined' ? totalOrders : 0; %>
+<% const completedOrdersCountVal = typeof completedOrdersCount !== 'undefined' ? completedOrdersCount : 0; %>
+<% const totalRevenueVal = typeof totalRevenue !== 'undefined' ? totalRevenue : 0; %>
+<% const statusCountVal = typeof statusCount !== 'undefined' ? statusCount : {}; %>
+<% const paymentDataVal = Array.isArray(paymentData) ? paymentData : []; %>
+<% const categoryDataVal = Array.isArray(categoryData) ? categoryData : []; %>
+<% const topProductsVal = Array.isArray(topProducts) ? topProducts : []; %>
+<% const monthlyDataVal = Array.isArray(monthlyData) ? monthlyData : []; %>
+<% const ordersVal = Array.isArray(orders) ? orders : []; %>
+<div class="container py-5">
+  <div class="mb-4">
+    <h1 class="display-6">Báo cáo doanh thu</h1>
+    <p class="text-muted">Tổng quan doanh thu tự động từ đơn hàng. Không cần nhập tay.</p>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-3">
+      <div class="card shadow-sm border-0 p-3 h-100">
+        <h6 class="mb-1">Tổng đơn hàng</h6>
+        <h2><%= totalOrdersCount %></h2>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="card shadow-sm border-0 p-3 h-100">
+        <h6 class="mb-1">Đơn hoàn thành</h6>
+        <h2><%= completedOrdersCountVal %></h2>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="card shadow-sm border-0 p-3 h-100">
+        <h6 class="mb-1">Tổng doanh thu</h6>
+        <h2>₫<%= Number(totalRevenueVal || 0).toLocaleString('vi-VN') %></h2>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="card shadow-sm border-0 p-3 h-100">
+        <h6 class="mb-1">Đơn theo trạng thái</h6>
+        <% Object.entries(statusCountVal || {}).forEach(([status, count]) => { %>
+          <div><strong><%= status %>:</strong> <%= count %></div>
+        <% }) %>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="card shadow-sm mb-3">
+        <div class="card-header">Doanh thu theo phương thức thanh toán</div>
+        <div class="card-body p-0">
+          <table class="table mb-0">
+            <thead><tr><th>Phương thức</th><th>Doanh thu</th></tr></thead>
+            <tbody>
+              <% paymentDataVal.forEach(item => { %>
+                <tr>
+                  <td><%= item.method %></td>
+                  <td>₫<%= Number(item.amount || 0).toLocaleString('vi-VN') %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card shadow-sm mb-3">
+        <div class="card-header">Doanh thu theo loại sản phẩm</div>
+        <div class="card-body p-0">
+          <table class="table mb-0">
+            <thead><tr><th>Danh mục</th><th>Doanh thu</th></tr></thead>
+            <tbody>
+              <% categoryDataVal.forEach(item => { %>
+                <tr>
+                  <td><%= item.category %></td>
+                  <td>₫<%= Number(item.amount || 0).toLocaleString('vi-VN') %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-header">Sản phẩm bán chạy</div>
+    <div class="card-body p-0">
+      <table class="table mb-0">
+        <thead><tr><th>Sản phẩm</th><th>Số lượng</th><th>Doanh thu</th></tr></thead>
+        <tbody>
+          <% if (topProductsVal.length === 0) { %>
+            <tr><td colspan="3" class="text-center">Chưa có dữ liệu.</td></tr>
+          <% } else { %>
+            <% topProductsVal.forEach(prod => { %>
+              <tr>
+                <td><%= prod.name %></td>
+                <td><%= prod.quantity %></td>
+                <td>₫<%= Number(prod.revenue || 0).toLocaleString('vi-VN') %></td>
+              </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-header">Doanh thu theo tháng</div>
+    <div class="card-body p-0">
+      <table class="table mb-0">
+        <thead><tr><th>Tháng</th><th>Doanh thu</th></tr></thead>
+        <tbody>
+          <% if (monthlyDataVal.length === 0) { %>
+            <tr><td colspan="2" class="text-center">Chưa có dữ liệu.</td></tr>
+          <% } else { %>
+            <% monthlyDataVal.forEach(item => { %>
+              <tr>
+                <td><%= item.month %></td>
+                <td>₫<%= Number(item.amount || 0).toLocaleString('vi-VN') %></td>
+              </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card shadow-sm mb-5">
+    <div class="card-header">Quản lý trạng thái hoá đơn (địa chỉ đơn hàng)</div>
+    <div class="card-body">
+      <a href="/admin/orders" class="btn btn-primary">Mở quản lý đơn hàng</a>
+      <p class="mt-2 text-muted">Ở đây bạn có thể chuyển trạng thái đơn hàng (pending/processing/shipped/completed/cancelled).</p>
+    </div>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-header">Chi tiết đơn hàng (danh sách tất cả đơn)</div>
+    <div class="card-body p-0 table-responsive">
+      <table class="table mb-0 table-hover">
+        <thead>
+          <tr>
+            <th>Mã đơn</th>
+            <th>Khách hàng</th>
+            <th>Tổng</th>
+            <th>Phương thức</th>
+            <th>Trạng thái</th>
+            <th>Ngày</th>
+            <th>Hành động</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (ordersVal.length === 0) { %>
+            <tr><td colspan="7" class="text-center">Chưa có đơn hàng.</td></tr>
+          <% } else { %>
+            <% ordersVal.forEach(order => { %>
+              <tr>
+                <td><%= order.id %></td>
+                <td><%= order.username %></td>
+                <td>₫<%= Number(order.total_amount || 0).toLocaleString('vi-VN') %></td>
+                <td><%= order.payment_method || '-' %></td>
+                <td><%= order.status || '-' %></td>
+                <td><%= order.created_at && order.created_at.toDate ? order.created_at.toDate().toLocaleString('vi-VN') : (new Date(order.created_at || new Date())).toLocaleString('vi-VN') %></td>
+                <td>
+                  <a href="/admin/orders/<%= order.id %>" class="btn btn-sm btn-secondary">Xem</a>
+                </td>
+              </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<%- include('../partials/footer') %>

@@ -1,0 +1,85 @@
+<header class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm py-2 sticky-top">
+  <div class="container align-items-center">
+    <a class="navbar-brand d-flex align-items-center gap-2 me-3" href="/">
+      <img src="/images/coffee-logo.svg" alt="Coffee Express" class="brand-logo" width="40" height="40" />
+      <span class="fw-bold text-white fs-5 text-nowrap">Coffee Express</span>
+    </a>
+    
+    <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="mainNav">
+      
+      <ul class="navbar-nav me-auto align-items-center"></ul>
+
+      <form class="d-flex mx-auto my-3 my-lg-0 px-2" style="max-width: 450px; width: 100%;" action="/products/search" method="GET">
+        <div class="input-group shadow-sm rounded-pill overflow-hidden border">
+          <input class="form-control border-0 bg-white px-4 py-2" type="search" name="q" placeholder="Tìm kiếm sản phẩm theo tên..." value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>" />
+          <button class="btn btn-dark px-4 fw-bold" type="submit">Tìm kiếm</button>
+        </div>
+      </form>
+
+      <ul class="navbar-nav ms-auto align-items-center gap-3">
+        <li class="nav-item">
+          <a class="nav-link text-white fw-bold text-uppercase letter-spacing-1" href="/products">Menu</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white fw-bold text-uppercase letter-spacing-1" href="/#about">Về chúng tôi</a>
+        </li>
+
+        <div class="vr bg-secondary opacity-50 d-none d-lg-block mx-1" style="width: 1px; height: 24px;"></div>
+
+        <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+          <li class="nav-item dropdown">
+            <a class="btn btn-secondary rounded-pill d-flex align-items-center gap-2 px-3 py-2 text-white" href="#" data-bs-toggle="dropdown" style="min-width: 120px;">
+              <i class="bi bi-person-circle fs-5"></i>
+              <span class="fw-semibold"><%= currentUser.username %></span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+              <li><a class="dropdown-item py-2" href="/profile"><i class="bi bi-person-fill me-2"></i>Hồ sơ</a></li>
+              <li><a class="dropdown-item py-2" href="/wallet/history"><i class="bi bi-clock-history me-2"></i>Lịch sử</a></li>
+              <% if (currentUser.role === 'admin') { %>
+                <li><a class="dropdown-item py-2 text-warning fw-bold" href="/admin"><i class="bi bi-shield-lock-fill me-2"></i>Admin</a></li>
+              <% } %>
+              <li><hr class="dropdown-divider" /></li>
+              <li>
+                <form action="/auth/logout" method="POST" class="px-3 pb-2 mt-1">
+                  <button type="submit" class="btn btn-outline-danger btn-sm w-100 rounded-pill fw-medium">Đăng xuất</button>
+                </form>
+              </li>
+            </ul>
+          </li>
+        <% } else { %>
+          <li class="nav-item">
+            <a class="btn btn-outline-light rounded-pill d-flex align-items-center gap-2 px-3 py-2" href="/auth/login">
+              <i class="bi bi-box-arrow-in-right"></i>
+              <span>Đăng nhập</span>
+            </a>
+          </li>
+        <% } %>
+
+        <% 
+          let tongSoLy = 0;
+          if (typeof cart !== 'undefined' && cart) {
+            for (let i = 0; i < cart.length; i++) {
+              tongSoLy += parseInt(cart[i].quantity || 1);
+            }
+          }
+        %>
+        <li class="nav-item ms-lg-1">
+          <a class="btn btn-danger d-flex align-items-center gap-2 px-3 py-2 rounded-pill text-nowrap" href="/products/cart" style="border: none;">
+            <i class="bi bi-cart4 text-white"></i>
+            <span class="fw-semibold text-white">Giỏ hàng</span>
+            
+            <span id="cartBadgeCount" class="badge rounded-pill bg-white text-danger" style="font-size: 0.8rem; padding: 0.35em 0.65em;">
+              <%= tongSoLy %>
+            </span>
+            
+          </a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</header>

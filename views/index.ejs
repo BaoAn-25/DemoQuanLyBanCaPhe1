@@ -1,0 +1,109 @@
+<%- include('partials/head', { title: 'Coffee Express' }) %>
+<%- include('partials/navbar') %>
+
+<section class="hero" id="home">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 text-white">
+        <h1 class="hero-headline">Cà phê thượng hạng. Nụ cười tận tay bạn.</h1>
+        <p class="hero-subline">Từ mẻ rang đầu tiên đến ly cà phê bạn cầm, mỗi bước đều được chăm chút. Đặt ngay - nhận hàng nhanh.</p>
+        <div class="d-flex flex-wrap gap-2">
+          <a href="/products" class="btn btn-primary btn-lg">Mua ngay</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <a href="#video" class="scroll-down">
+    Kéo xuống
+    <span class="arrow"></span>
+  </a>
+</section>
+
+<section id="video" class="py-5 section-light">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="section-title">Video giới thiệu</h2>
+      <div class="section-divider"></div>
+      <p class="text-muted">Xem video để hiểu rõ hơn về trải nghiệm cà phê tại Coffee Express.</p>
+    </div>
+    <div class="ratio ratio-16x9">
+      <iframe src="https://www.youtube.com/embed/QiZeeuFg3LM" title="YouTube video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
+
+<section id="highlights" class="py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="section-title">Menu nổi bật</h2>
+      <div class="section-divider"></div>
+      <p class="text-muted">Những thức uống được yêu thích nhất, chọn và thêm vào giỏ ngay.</p>
+    </div>
+
+    <div class="row g-4">
+      <% featured.forEach((product) => { %>
+      <div class="col-md-6 col-lg-3">
+        <div class="card product-card h-100">
+          <img src="<%= product.image_url %>" class="card-img-top" alt="<%= product.name %>" />
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title"><%= product.name %></h5>
+            <p class="card-text text-muted"><%= product.description %></p>
+            <div class="mt-auto">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="price">đ<%= product.price.toLocaleString('vi-VN') %></span>
+                <span class="badge bg-warning text-dark"><%= product.category %></span>
+              </div>
+              <form action="/products/add-to-cart" method="POST" class="d-grid add-to-cart-form">
+                <input type="hidden" name="productId" value="<%= product.id %>" />
+                <button type="submit" class="btn btn-primary btn-sm">Thêm vào giỏ</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="py-5 section-light">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <h2 class="section-title">Về Coffee Express</h2>
+        <div class="section-divider"></div>
+        <p class="text-muted">Chúng tôi bắt đầu với một niềm đam mê đơn giản: mang đến ly cà phê ngon lành nhất cho bạn. Lựa chọn nguồn hạt, rang xay cẩn thận và giao hàng nhanh chóng là những gì chúng tôi tự hào.</p>
+        <ul class="list-unstyled text-muted">
+          <li class="mb-2"><strong>Đa dạng menu:</strong> từ espresso đậm đà đến latte dịu ngọt.</li>
+          <li class="mb-2"><strong>Giao hàng nhanh:</strong> chuẩn 30 phút trong khu vực nội thành.</li>
+          <li class="mb-2"><strong>Thanh toán linh hoạt:</strong> tiền mặt, Momo, chuyển khoản.</li>
+        </ul>
+      </div>
+      <div class="col-lg-6 text-center mt-4 mt-lg-0">
+        <img src="/images/cafe-shop.jpg" alt="Coffee Express" class="img-fluid rounded-4 shadow-lg" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="subscribe" class="py-5 section-light">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="section-title">Nhận thông tin mới nhất</h2>
+      <div class="section-divider"></div>
+      <p class="text-muted">Đăng ký nhận tin để không bỏ lỡ chương trình ưu đãi và sản phẩm mới.</p>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-lg-6">
+        <div class="input-group mb-3">
+          <input type="email" class="form-control" placeholder="Email của bạn" aria-label="Email" aria-describedby="subscribeButton" />
+          <button class="btn btn-coffee" type="button" id="subscribeButton">Đăng ký</button>
+        </div>
+        <p class="text-center text-muted">Chúng tôi sẽ không chia sẻ email của bạn với bên thứ ba.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>
